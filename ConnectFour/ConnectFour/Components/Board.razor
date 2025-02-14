@@ -1,0 +1,126 @@
+﻿@using System.Drawing
+@inject State State
+
+<HeadContent>
+    <style>
+        :root {
+            --board-bg: @ColorTranslator.ToHtml(BoardColor);
+            --player1: @ColorTranslator.ToHtml(Player1Color);
+            --player2: @ColorTranslator.ToHtml(Player2Color);
+        }
+    </style>
+</HeadContent>
+
+<nav>
+    @for (byte i = 0; i < 7; i++)
+    {
+        var col = i;
+        <span title="Click to play a piece" @onclick="() => PlayPiece(col)">🔽</span>
+    }
+</nav>
+
+<article>
+    @winnerMessage
+    <button style="@ResetStyle" @onclick="ResetGame">Reset the game</button>
+    <br />
+    <span class="alert-danger">@errorMessage</span>
+    <span class="alert-info">@State.CurrentTurn</span>
+</article>
+
+<div>
+    <div class="board">
+        @for (int col = 0; col < 7; col++) // Loop through columns
+        {
+            <div class="column">
+                @for (int row = 5; row >= 0; row--) // Loop rows from bottom to top
+                {
+                    int index = row * 7 + col;
+                    <span class="container">
+                        <span class="@pieces[index] col@col drop@(6 - row)"></span>
+                    </span>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Color BoardColor { get; set; } = ColorTranslator.FromHtml("yellow");
+
+    [Parameter]
+    public Color Player1Color { get; set; } = ColorTranslator.FromHtml("red");
+
+    [Parameter]
+    public Color Player2Color { get; set; } = ColorTranslator.FromHtml("blue");
+
+    private string[] pieces = new string[42];
+    private string winnerMessage = string.Empty;
+    private string errorMessage = string.Empty;
+
+    private string ResetStyle => (winnerMessage == string.Empty) ? "display: none;" : "";
+
+    protected override void OnInitialized()
+    {
+        State.ResetBoard();
+        UpdatePieces();
+    }
+
+    private void PlayPiece(byte col)
+    {
+        errorMessage = string.Empty;
+        try
+        {
+            var player = State.PlayerTurn; // Get current player (1 or 2)
+            var landingRow = State.PlayPiece(col); // Get the row the piece lands in
+
+            if (landingRow != -1) // If move is valid
+            {
+                int index = landingRow * 7 + col; // Correct piece position in array
+                pieces[index] = $"player{player} col{col} drop{6 - landingRow}"; // Assign classes
+            }
+
+            // Check for a winner
+            winnerMessage = State.CheckForWin() switch
+            {
+                State.WinState.Player1_Wins => "Player 1 Wins!",
+                State.WinState.Player2_Wins => "Player 2 Wins!",
+                State.WinState.Tie => "It's a tie!",
+                _ => ""
+            };
+        }
+        catch (ArgumentException ex)
+        {
+            errorMessage = ex.Message;
+        }
+    }
+
+
+    private void UpdatePieces()
+    {
+        for (int row = 0; row < 6; row++)
+        {
+            for (int col = 0; col < 7; col++)
+            {
+                int index = row * 7 + col;
+                pieces[index] = State.Pieces[index] switch
+                {
+                    Piece.Player1 => $"player1 col{col} drop{6 - row}",
+                    Piece.Player2 => $"player2 col{col} drop{6 - row}",
+                    _ => ""
+                };
+            }
+        }
+    }
+
+
+
+
+    void ResetGame()
+    {
+        State.ResetBoard();
+        winnerMessage = string.Empty;
+        errorMessage = string.Empty;
+        pieces = new string[42];
+    }
+}

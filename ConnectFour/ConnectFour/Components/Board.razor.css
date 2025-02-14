@@ -1,0 +1,140 @@
+div {
+    position: relative;
+}
+
+nav {
+    top: 4em;
+    width: 30em;
+    display: inline-flex;
+    flex-direction: row;
+    margin-left: 10px;
+}
+
+    nav span {
+        width: 4em;
+        text-align: center;
+        cursor: pointer;
+        font-size: 1em;
+    }
+
+/* BOARD */
+.board {
+    margin-top: 1em;
+    flex-wrap: wrap;
+    width: 30em;
+    height: 24em;
+    overflow: hidden;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    z-index: -5;
+    row-gap: 0;
+    pointer-events: none;
+    border-left: 10px solid var(--board-bg);
+}
+
+/* COLUMNS */
+.column {
+    display: flex;
+    flex-direction: column-reverse; /* Ensures pieces drop from top to bottom */
+    align-items: center;
+    width: 4em;
+}
+
+/* SQUARE CONTAINER WITH A CIRCULAR CUTOUT */
+span.container {
+    width: 4em;
+    height: 4em;
+    margin: 0;
+    padding: 4px;
+    overflow: hidden;
+    background-color: transparent;
+    position: relative;
+    z-index: -2;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CIRCULAR CUTOUT */
+.container span {
+    width: 3.5em;
+    height: 3.5em;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3em var(--board-bg);
+    left: 0px;
+    position: absolute;
+    display: block;
+    z-index: 5;
+    pointer-events: none;
+}
+
+/* PLAYER PIECES */
+.player1, .player2 {
+    width: 3.5em;
+    height: 3.5em;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 3; /* Ensure pieces sit on top */
+    transition: transform 0.5s ease-in-out; /* Smooth falling animation */
+}
+
+/* Player 1 (Red) */
+.player1 {
+    background-color: var(--player1);
+    box-shadow: 0 0 0 4px var(--player1);
+}
+
+/* Player 2 (Blue) */
+.player2 {
+    background-color: var(--player2);
+    box-shadow: 0 0 0 4px var(--player2);
+}
+
+/* Drop animation */
+@keyframes drop {
+    from {
+        transform: translateY(-6em); /* Start above */
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Apply animation dynamically */
+.drop {
+    animation: drop 0.5s ease-in-out forwards;
+}
+
+/* Column positioning - Fix for proper alignment */
+.col0 {
+    left: 0em;
+}
+
+.col1 {
+    left: 4em;
+}
+
+.col2 {
+    left: 8em;
+}
+
+.col3 {
+    left: 12em;
+}
+
+.col4 {
+    left: 16em;
+}
+
+.col5 {
+    left: 20em;
+}
+
+.col6 {
+    left: 24em;
+}
