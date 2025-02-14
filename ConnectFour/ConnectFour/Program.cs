@@ -1,5 +1,5 @@
-using DataInteraction;
-using DataInteraction.Components;
+using Connect4;
+using Connect4.Components;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

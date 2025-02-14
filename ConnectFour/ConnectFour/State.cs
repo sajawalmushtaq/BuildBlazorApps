@@ -1,7 +1,7 @@
 ﻿using System.IO.Pipelines;
 using System.Numerics;
 
-namespace DataInteraction;
+namespace Connect4;
 
 public class State
 {

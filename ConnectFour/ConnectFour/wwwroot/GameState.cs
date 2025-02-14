@@ -1,4 +1,4 @@
-﻿namespace ConnectFour;
+﻿namespace Connect4;
 
 public class GameState
 {
